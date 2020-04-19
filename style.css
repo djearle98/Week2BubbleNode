@@ -1,0 +1,24 @@
+:root{
+  --primary: #2F9C89;
+  --primary-dark: #206A5D;
+  --primary-light-1: #A1E7DA;
+  --primary-light-2: #B0F1E5;
+  --status-great: #35F66B;
+}
+
+*{
+  font-family: 'Roboto', sans-serif;
+}
+
+.title {
+  font-size: 24pt;
+  text-align: center;
+  color: var(--primary);
+}
+
+.node {
+  border-radius: 100%;
+  height:300px;
+  width:300px;
+  box-shadow: 6px 6px var(--primary);
+}
