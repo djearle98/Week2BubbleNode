@@ -4,6 +4,7 @@
   --primary-light-1: #A1E7DA;
   --primary-light-2: #B0F1E5;
   --status-great: #35F66B;
+  --grey: #595959;
 }
 
 *{
@@ -11,14 +12,51 @@
 }
 
 .title {
-  font-size: 24pt;
+  /* constant */ 
   text-align: center;
   color: var(--primary);
+  margin: auto;
+  background-color: transparent;
+  display: block;
+  
+  /* variable */
+  font-size: 24pt;
+  height: 100px;
+  width: 300px;
+  margin-top: 85px; /* this isn't working properly */
+  padding-top: 70px;
+  border-style: none;
 }
 
 .node {
+  /* constant */ 
   border-radius: 100%;
-  height:300px;
-  width:300px;
-  box-shadow: 6px 6px var(--primary);
+  background-color: white;
+
+  /* variable */
+  height: 480px;
+  width: 480px;
+  box-shadow: 20px 20px var(--primary);
+  
+  /* temporary */
+  margin: 100px;
+}
+
+.label {
+  text-align: right;
+  color: var(--primary);
+  width: calc(50% - 10px);
+  float: left;
+}
+.data {
+  color: var(--grey);
+  float: left;
+  padding-left: 20px;
+}
+.line-item{
+  padding: 20px;
+}
+
+body {
+  background-color: var(--primary-light-1);
 }
