@@ -9,22 +9,27 @@ class node {
     this.parents = parents;
     this.children = children; 
     
+    /*
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="fname">
+		*/
     document.getElementById("NodeNetwork").innerHTML += "\
     	<div class='node'> \
-				<div class='title'>"+this.title+"</div> \
-      	<div class='info-line'> \
+      	<label for='title' style='display:none'>Title:</label> \
+				<input disabled type='text' class='title' name='title' value='"+this.title+"'> \
+      	<div class='line-item'> \
           <div class='label'>Description:</div> \
           <div class='data'>"+this.description+"</div> \
 				</div> \
-      	<div class='info-line'> \
+      	<div class='line-item'> \
           <div class='label'>Owner:</div> \
           <div class='data'>"+this.owner+"</div> \
 				</div> \
-      	<div class='info-line'> \
+      	<div class='line-item'> \
           <div class='label'>Deadline:</div> \
           <div class='data'>"+this.deadline+"</div> \
 				</div> \
-      	<div class='info-line'> \
+      	<div class='line-item'> \
           <div class='label'>Staus:</div> \
           <div class='data'>"+this.status+"</div> \
 				</div> \
