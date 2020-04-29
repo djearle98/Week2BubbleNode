@@ -1,140 +1,185 @@
-/*VARIABLES*/
-var obj = document.getElementById("obj");
-var presetButtons = [];
-
 /*CLASSES*/
-class Animation {
-  constructor(obj, animAlgorithm, ease, frameDur, animDur) {
-    this.obj = obj;
-    this.setAnimAlgorithm(animAlgorithm);
-    this.frameDur = frameDur; //ms
-    this.animDur = animDur; //ms
-    this.ease = ease;
-
-    this.animating = false;
-    this.frameNum = 0;
-    this.clock = null;
-    this.startData = [];
-    this.curData = [];
-    this.endData = [];
-    this.percentDone = 0;
-    this.progress = 0;
-    this.parameters = [];
+class Scene {
+	constructor () {
+  	this.html = "";
+    this.applyCss = null;
   }
-  
-  addParameter(name, unit){
-  	/*var p = {
-    	name: name,
-      unit: unit,
-    };
+  paint(){
+		//canvas.innerHTML = this.html;
+    this.applyCss(); 
+  }
+}
+class SingleNodeScene extends Scene {
+	constructor () {
+  	super();
+  }
+  paint(nodeId){
+    /*
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="fname">
+		
+    var node = allNodes.get(nodeId);
+    this.html = "\
+    	<div class='node'> \
+				<div contenteditable class='title'> \
+        	<p>"+node.title+"</p> \
+				</div>\
+      	<div class='line-item'> \
+          <div class='label'>Description:</div> \
+          <div class='data'>"+node.description+"</div> \
+				</div> \
+      	<div class='line-item'> \
+          <div class='label'>Owner:</div> \
+          <div class='data'>"+node.owner+"</div> \
+				</div> \
+      	<div class='line-item'> \
+          <div class='label'>Deadline:</div> \
+          <div class='data'>"+node.deadline+"</div> \
+				</div> \
+      	<div class='line-item'> \
+          <div class='label'>Staus:</div> \
+          <div class='data'>"+node.status+"</div> \
+				</div> \
+			</div>";
+		
     */
-  	this.parameters.push({
-    	name: name,
-      unit: unit,
-      display: function(value){
-      	if(unit=="rgb"){
-        	return "rgb("+value+")";
-        } else {
-        	return""+value+unit;
-        }
-      }
-    });
+    super.applyCss = function(){
+    	
+        /* set to big and biased toward the top
+          font-size: 24pt;
+          height: 100px;
+          width: 300px;
+          margin-top: 85px; // this isn't working properly
+          padding-top: 70px;
+          border-style: none;
+         */
+    };
+    super.paint();
   }
-  
-  setAnimAlgorithm(algorithm) {
-    switch (algorithm.toLowerCase()) {
-      case "linear":
-        this.animAlgorithm = this.linear;
-        break;
-      default:
-        this.animAlgorithm = this.linear;
-    }
+}
+class NetworkNodeScene extends Scene {
+	constructor () {
+  	super();
   }
-
-  get progress() {
-    if (this.ease == true) {
-      return 1 - (Math.cos(this.percentDone * Math.PI) + 1) / 2;
-    } else {
-      return this.percentDone;
-    }
+  paint(){
+    /*
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="fname">
+		
+    for (var i = 0; i< allNodes.size; i++){
+      var node = allNodes.get(i+1);
+      this.html += "\
+        <div class='node' onclick='singleNodeScene.paint("+node.nodeId+")'> \
+          <div class='title'> \
+            <p>"+node.title+"</p> \
+          </div>\
+          <div class='line-item'> \
+            <div class='label'>Description:</div> \
+            <div class='data'>"+node.description+"</div> \
+          </div> \
+          <div class='line-item'> \
+            <div class='label'>Owner:</div> \
+            <div class='data'>"+node.owner+"</div> \
+          </div> \
+          <div class='line-item'> \
+            <div class='label'>Deadline:</div> \
+            <div class='data'>"+node.deadline+"</div> \
+          </div> \
+          <div class='line-item'> \
+            <div class='label'>Staus:</div> \
+            <div class='data'>"+node.status+"</div> \
+          </div> \
+        </div>";
+    }*/
+    
+    super.applyCss = function(){
+      /*
+      //CHANGE TO SMALL AND CENTERED
+      font-size: 24pt;
+      height: 100px;
+      width: 300px;
+      margin-top: 85px; // this isn't working properly
+      padding-top: 70px;
+      border-style: none;
+      */
+    };
+    super.paint();
   }
-  set progress(value) {}
-  anim(endData) {
-    this.endData = endData;
-    this.startData = this.curData;
-    this.frameNum = 0;
-    cancelAnimationFrame(this.clock);
-
-    this.calcFrame();
+}
+class Node {
+	constructor (nodeId, title, description, owner, deadline, status, parents, children) { 
+  	this.nodeId = nodeId;
+    console.log(this.nodeId);
+    this.metadata = new Map();
+    this.metadata.set("nodeId", nodeId);
+    this.metadata.set("title", title);
+    this.metadata.set("description", description);
+    this.metadata.set("owner", owner);
+    this.metadata.set("deadline", deadline);
+    this.metadata.set("status", status);
+    this.metadata.set("parents", parents);
+    this.metadata.set("children", children);
+    
+    this.node = document.createElement("div");
+    this.node.className = "node";
+    this.node.onclick = this.test;
+    canvas.appendChild(this.node);
+    
+    this.title = document.createElement("div");
+    this.title.className = "title";
+    this.node.appendChild(this.title);
+    
+    this.p = document.createElement("p");
+    this.title.appendChild(this.p);
+    
+    this.textNodeForTitle = document.createTextNode(this.metadata.get("title"));
+    this.p.appendChild(this.textNodeForTitle);
+    
+    /*
+    
+    <div class='node' onclick='singleNodeScene.paint("+node.nodeId+")'> \
+          <div class='title'> \
+            <p>"+node.title+"</p> \
+          </div>\
+          <div class='line-item'> \
+            <div class='label'>Description:</div> \
+            <div class='data'>"+node.description+"</div> \
+          </div> \
+          <div class='line-item'> \
+            <div class='label'>Owner:</div> \
+            <div class='data'>"+node.owner+"</div> \
+          </div> \
+          <div class='line-item'> \
+            <div class='label'>Deadline:</div> \
+            <div class='data'>"+node.deadline+"</div> \
+          </div> \
+          <div class='line-item'> \
+            <div class='label'>Staus:</div> \
+            <div class='data'>"+node.status+"</div> \
+          </div> \
+        </div>";
+        */
   }
-  calcFrame() {
-    this.percentDone = (this.frameDur * this.frameNum) / this.animDur;
-    if (this.percentDone <= 1) {
-      this.frameNum++;
-      this.curData = this.animAlgorithm();
-      this.paint();
-      this.clock = requestAnimationFrame(animationHandler);
-    }
-  }
-  linear() {
-    var progress = this.progress;
-    var invProgress = 1 - progress;
-    var result = [];
-    for (var i = 0; i < this.endData.length; i++) {
-    	if(Array.isArray(this.endData[i])){
-      	var subResult = [];
-      	for (var j = 0; j < this.endData[i].length; j++) {
-          subResult.push(this.startData[i][j] * invProgress + this.endData[i][j] * progress);
-        }
-				result.push(subResult);
-      } else {
-	      result.push(this.startData[i] * invProgress + this.endData[i] * progress);
-      }
-    }
-    return result;
-  }
-  paint() {
-    //update the object
-		for(var i=0; i<this.parameters.length; i++){
-    	this.obj.style.setProperty(this.parameters[i].name, this.parameters[i].display(this.curData[i]));
-    }
-  }
-  init(data) {
-    this.curData = data;
-    this.paint();
+        
+	test(){
+  	console.log("CLICKED: "+this.nodeId);
   }
 }
 
-/*FUNCTIONS*/
-function addPreset(data) {
-  var i = presetButtons.push(document.createElement("button")) - 1;
-  var button = presetButtons[i];
-  button.setAttribute("type", "button");
-  button.addEventListener("click", function() {
-    onclickHandler(data);
-  }, false);
-  var text = document.createTextNode("Preset: [" + data + "]");
-  button.appendChild(text);
-  document.body.appendChild(button);
-}
-function onclickHandler(data) {
-  animFrameSize.anim(data)
-}
-function animationHandler() {
-  animFrameSize.calcFrame();
-  console.log("FRAME");
-}
+/*VARIABLES*/
+var canvas = document.getElementById("canvas");
+var allNodes = new Map();
+var singleNodeScene = new SingleNodeScene();
+var networkNodeScene = new NetworkNodeScene();
 
-/*EXECUTION*/
-var animFrameSize = new Animation(obj, "Linear", true, 10, 800);
-animFrameSize.addParameter("width", "%");
-animFrameSize.addParameter("height", "%");
-animFrameSize.addParameter("left", "%");
-animFrameSize.addParameter("top", "%");
-animFrameSize.addParameter("border-radius", "px");
-animFrameSize.addParameter("background-color","rgb");
+/*INIT*/
+for (var i = 1; i<=9; i++) {
+	allNodes.set(i, new Node(i, "Node " + i,"This is Node " + i, "David", "12/12/2020", "Great", [], []));
+}
+networkNodeScene.paint();
 
-animFrameSize.init([95, 95, 2.5, 2.5, 0, [255,0,0]]);
-addPreset([95, 95, 2.5, 2.5, 0, [255,0,0]]);
-addPreset([90, 90, 5, 5, 15, [0,255, 255]]);
-addPreset([50, 90, 25, 5, 50, [128,128,128]]);
+function createNode(name) {
+    let li = document.createElement('li');
+    li.textContent = name;
+    return li;
+}
